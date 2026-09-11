@@ -1,125 +1,346 @@
-<!doctype html>
+<!DOCTYPE html>
 <html lang="id">
 <head>
-  <meta charset="utf-8">
-  <meta name="viewport" content="width=device-width,initial-scale=1">
-  <title>Konsultasi Siswa</title>
-  <meta name="description" content="Kanal konsultasi dan tanya jawab siswa.">
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>KONSULTASI - Consultation & Tanya Jawab Siswa</title>
   <link rel="stylesheet" href="style.css">
 </head>
 <body>
-  <header class="topbar">
-    <div class="brand">
-      <div class="brand-mark">K</div>
-      <div><strong>Konsultasi</strong><span>Tanya Jawab Siswa</span></div>
+
+  <!-- NAVBAR TOP -->
+  <nav class="navbar">
+    <div class="nav-container">
+      <div class="brand">
+        <span class="brand-icon">🏫</span>
+        <span class="brand-name">KONSULTASI</span>
+      </div>
+      <div class="nav-links" id="navLinks">
+        <button class="nav-btn" onclick="showPage('homePage')">Beranda</button>
+        <button class="nav-btn" onclick="showPage('publicPage')">Tanya Jawab Publik</button>
+        <button class="nav-btn primary" id="authBtn" onclick="showPage('loginPage')">Masuk / Daftar</button>
+      </div>
     </div>
-    <nav id="nav" class="nav"></nav>
-  </header>
+  </nav>
 
-  <main class="container">
-    <section id="page-home" class="page">
-      <div class="hero">
-        <div>
-          <span class="eyebrow">RUANG AMAN UNTUK BERTANYA</span>
-          <h1>Tak harus malu untuk bertanya.</h1>
-          <p>Tanyakan pelajaran, kesulitan belajar, pertemanan, masalah pribadi, agama, karier, atau hal lain yang ingin kamu konsultasikan.</p>
-          <div class="actions">
-            <button class="btn primary" onclick="showPage('register')">Buat Akun</button>
-            <button class="btn secondary" onclick="showPage('login')">Masuk</button>
-          </div>
-        </div>
-        <div class="hero-card">
-          <div class="hero-icon">💬</div>
-          <h3>Privasi diutamakan</h3>
-          <p>Kamu dapat memilih apakah nama ditampilkan dan apakah pertanyaan boleh dipublikasikan.</p>
-        </div>
-      </div>
+  <!-- ALERT GLOBAL -->
+  <div class="container">
+    <div id="alertBox" class="alert hidden"></div>
+  </div>
 
-      <div class="grid-3">
-        <div class="info-card"><span>📖</span><h3>Pelajaran</h3><p>Tanya materi yang belum dipahami.</p></div>
-        <div class="info-card"><span>💭</span><h3>Konsultasi</h3><p>Ceritakan masalah sosial atau pribadi.</p></div>
-        <div class="info-card"><span>🕌</span><h3>Agama</h3><p>Tanyakan ibadah, fikih, akhlak, dan lainnya.</p></div>
-      </div>
-
-      <div class="notice">
-        <strong>Catatan penting:</strong> Jika kamu sedang dalam bahaya, mengalami kekerasan, atau membutuhkan bantuan segera, jangan hanya mengandalkan aplikasi ini. Segera hubungi orang tua/wali, guru, BK, atau pihak sekolah yang dapat membantu secara langsung.
-      </div>
-      <div class="panel">
-        <div class="page-head"><div><h2>Pertanyaan & Jawaban Publik</h2><p class="muted">Hanya pertanyaan yang diizinkan untuk dipublikasikan yang tampil di sini.</p></div><button class="btn ghost" onclick="loadPublicQuestions()">Muat ulang</button></div>
-        <div id="public-list" class="question-list"><div class="empty">Memuat...</div></div>
-      </div>
-    </section>
-
-    <section id="page-login" class="page hidden">
-      <div class="auth-card">
-        <button class="back" onclick="showPage('home')">← Kembali</button>
-        <h1>Masuk</h1>
-        <p class="muted">Siswa masuk dengan username. Guru masuk dengan nomor HP.</p>
-        <div class="tabs">
-          <button class="tab active" data-login-role="SISWA">Siswa</button>
-          <button class="tab" data-login-role="GURU">Guru</button>
-          <button class="tab" data-login-role="ADMIN">Admin</button>
+  <!-- HOME PAGE -->
+  <main id="homePage" class="page active">
+    <section class="hero">
+      <div class="hero-content">
+        <h1>Ruang Aman Konsultasi & Tanya Jawab Siswa</h1>
+        <p>Tanyakan kesulitan belajar, masalah sosial, pribadi, sekolah, syariat agama, hingga perencanaan karier tanpa ragu dan terjaga privasinya.</p>
+        
+        <!-- SAFETY NOTICE REQUIRED BY RULE 33 -->
+        <div class="safety-card">
+          <span class="safety-icon">🛡️</span>
+          <p><strong>Pemberitahuan Keselamatan:</strong> Jika kamu sedang berada dalam bahaya, mengalami kekerasan, mendapat ancaman, atau menghadapi keadaan darurat, jangan hanya mengandalkan aplikasi ini. Segera hubungi orang tua/wali, guru, BK, atau pihak sekolah yang dapat membantu secara langsung.</p>
         </div>
 
-        <form id="student-login-form" class="form">
-          <label>Username<input name="username" placeholder="Contoh: ahmad atau ahmad12" required></label>
-          <label>Password<div class="password-wrap"><input name="password" type="password" placeholder="Masukkan password 4–8 karakter" required><button type="button" class="eye" aria-label="Tampilkan password">◉</button></div></label>
-          <button class="btn primary full">Masuk sebagai Siswa</button>
-          <button type="button" class="link-btn" onclick="showPage('register')">Belum punya akun? Daftar</button>
-          <p class="small muted">Lupa password? Hubungi admin sekolah untuk reset akun.</p>
-        </form>
-
-        <form id="teacher-login-form" class="form hidden">
-          <label>Nomor HP<input name="phone" inputmode="tel" placeholder="Contoh: 081234567890" required></label>
-          <button class="btn primary full">Masuk sebagai Guru</button>
-          <p class="small muted">V1 menggunakan nomor HP yang terdaftar di data guru.</p>
-        </form>
-
-        <form id="admin-login-form" class="form hidden">
-          <label>Nomor HP<input name="phone" inputmode="tel" placeholder="Contoh: 081234567890" required></label>
-          <label>Password<div class="password-wrap"><input name="password" type="password" placeholder="Password admin" required><button type="button" class="eye" aria-label="Tampilkan password">◉</button></div></label>
-          <button class="btn primary full">Masuk sebagai Admin</button>
-        </form>
-        <div id="login-msg" class="form-msg"></div>
+        <div class="hero-actions">
+          <button class="btn btn-primary" onclick="checkAuthAndAsk()">Tanya Sekarang</button>
+          <button class="btn btn-secondary" onclick="showPage('publicPage')">Lihat Tanya Jawab</button>
+        </div>
       </div>
-    </section>
-
-    <section id="page-register" class="page hidden">
-      <div class="auth-card wide">
-        <button class="back" onclick="showPage('home')">← Kembali</button>
-        <h1>Daftar Akun Siswa</h1>
-        <p class="muted">Email tidak diperlukan.</p>
-        <form id="register-form" class="form two-col">
-          <label>Nama Lengkap<input name="name" placeholder="Contoh: Ahmad Fauzan" required></label>
-          <label>Username<input id="reg-username" name="username" placeholder="Contoh: ahmad atau ahmad12" required>
-            <span id="username-status" class="field-status"></span>
-          </label>
-          <label>Kelas<input name="className" placeholder="Contoh: XI" required></label>
-          <label>Jurusan<input name="major" placeholder="Contoh: TKJ / IPA / IPS" required></label>
-          <label>Password<div class="password-wrap"><input name="password" type="password" minlength="4" maxlength="8" placeholder="4–8 karakter" required><button type="button" class="eye" aria-label="Tampilkan password">◉</button></div><span class="hint">Minimal 4, maksimal 8 karakter.</span></label>
-          <label>Konfirmasi Password<div class="password-wrap"><input name="confirm" type="password" minlength="4" maxlength="8" placeholder="Ketik ulang password" required><button type="button" class="eye" aria-label="Tampilkan password">◉</button></div><span id="confirm-status" class="field-status"></span></label>
-          <div class="form-actions full-row">
-            <button class="btn primary">Daftar</button>
-          </div>
-        </form>
-        <div id="register-msg" class="form-msg"></div>
-      </div>
-    </section>
-
-    <section id="page-student" class="page hidden">
-      <div id="student-content"></div>
-    </section>
-
-    <section id="page-teacher" class="page hidden">
-      <div id="teacher-content"></div>
-    </section>
-
-    <section id="page-admin" class="page hidden">
-      <div id="admin-content"></div>
     </section>
   </main>
 
-  <footer>© 2026 Konsultasi Siswa · V1</footer>
+  <!-- LOGIN PAGE -->
+  <section id="loginPage" class="page">
+    <div class="auth-card">
+      <h2>Masuk ke KONSULTASI</h2>
+      <p class="subtext">Silakan pilih jenis akun kamu untuk melanjutkan</p>
+
+      <div class="tab-group">
+        <button class="tab-btn active" id="tabSiswaBtn" onclick="switchLoginTab('siswa')">Siswa / Admin</button>
+        <button class="tab-btn" id="tabGuruBtn" onclick="switchLoginTab('guru')">Guru</button>
+      </div>
+
+      <!-- FORM LOGIN SISWA / ADMIN -->
+      <form id="loginSiswaForm" onsubmit="handleLoginSubmit(event)">
+        <div class="form-group">
+          <label for="loginUsername">Username / ID Admin</label>
+          <input type="text" id="loginUsername" class="form-input" placeholder="Masukkan username kamu" required>
+        </div>
+        <div class="form-group">
+          <label for="loginPassword">Password</label>
+          <div class="password-wrapper">
+            <input type="password" id="loginPassword" class="form-input" placeholder="Masukkan password" required>
+            <button type="button" class="btn-eye" onclick="togglePassword('loginPassword')">👁️</button>
+          </div>
+        </div>
+        <button type="submit" id="btnLoginSubmit" class="btn btn-primary full">Masuk</button>
+        <p class="auth-footer">Lupa password? <a href="#" onclick="alert('Lupa password V1: Silakan hubungi admin sekolah atau guru BK.')">Hubungi Admin Sekolah</a></p>
+        <p class="auth-footer">Belum punya akun? <a href="#" onclick="showPage('registerPage')">Daftar Siswa</a></p>
+      </form>
+
+      <!-- FORM LOGIN GURU -->
+      <form id="loginGuruForm" class="hidden" onsubmit="handleLoginGuruSubmit(event)">
+        <div class="form-group">
+          <label for="loginGuruHp">Nomor HP Terdaftar</label>
+          <input type="tel" id="loginGuruHp" class="form-input" placeholder="Contoh: 081234567890" required>
+        </div>
+        <button type="submit" id="btnLoginGuruSubmit" class="btn btn-primary full">Masuk sebagai Guru</button>
+      </form>
+    </div>
+  </section>
+
+  <!-- REGISTER SISWA PAGE -->
+  <section id="registerPage" class="page">
+    <div class="auth-card">
+      <h2>Pendaftaran Siswa Baru</h2>
+      <p class="subtext">Buat akun aman kamu untuk mulai berkonsultasi</p>
+
+      <form id="registerForm" onsubmit="handleRegisterSubmit(event)">
+        <div class="form-group">
+          <label for="regNama">Nama Lengkap</label>
+          <input type="text" id="regNama" class="form-input" placeholder="Nama lengkap siswa" minlength="2" maxlength="100" required>
+        </div>
+        <div class="form-group">
+          <div class="form-row">
+            <div>
+              <label for="regKelas">Kelas</label>
+              <select id="regKelas" class="form-input" required>
+                <option value="">Pilih Kelas</option>
+                <option value="X">X (Sepuluh)</option>
+                <option value="XI">XI (Sebelas)</option>
+                <option value="XII">XII (Dua Belas)</option>
+              </select>
+            </div>
+            <div>
+              <label for="regJurusan">Jurusan</label>
+              <input type="text" id="regJurusan" class="form-input" placeholder="Contoh: IPA 1 / RPL" required>
+            </div>
+          </div>
+        </div>
+        <div class="form-group">
+          <label for="regUsername">Username (Unik)</label>
+          <input type="text" id="regUsername" class="form-input" placeholder="Kombinasi huruf/angka tanpa spasi" required>
+        </div>
+        <div class="form-group">
+          <label for="regPassword">Password (4-8 karakter)</label>
+          <div class="password-wrapper">
+            <input type="password" id="regPassword" class="form-input" minlength="4" maxlength="8" placeholder="4 - 8 karakter" required>
+            <button type="button" class="btn-eye" onclick="togglePassword('regPassword')">👁️</button>
+          </div>
+        </div>
+        <div class="form-group">
+          <label for="regKonfirmasi">Konfirmasi Password</label>
+          <input type="password" id="regKonfirmasi" class="form-input" placeholder="Ketik ulang password" required>
+        </div>
+        <button type="submit" id="btnRegisterSubmit" class="btn btn-primary full">Daftar Akun</button>
+        <p class="auth-footer">Sudah punya akun? <a href="#" onclick="showPage('loginPage')">Masuk di sini</a></p>
+      </form>
+    </div>
+  </section>
+
+  <!-- STUDENT DASHBOARD -->
+  <section id="studentDashboard" class="page">
+    <div class="dashboard-header">
+      <div>
+        <h2>Dashboard Siswa</h2>
+        <p id="studentWelcome">Selamat datang, Siswa</p>
+      </div>
+      <button class="btn btn-primary" onclick="showCreateQuestionModal()">+ Buat Pertanyaan Baru</button>
+    </div>
+
+    <div class="section-title">Riwayat Konsultasi Kamu</div>
+    <div id="studentQuestionsList" class="questions-grid">
+      <div class="loading-spinner">Memuat data pertanyaan...</div>
+    </div>
+  </section>
+
+  <!-- CREATE QUESTION MODAL / PAGE -->
+  <section id="createQuestionPage" class="page">
+    <div class="card-modal">
+      <button class="btn-close" onclick="showPage('studentDashboard')">✕</button>
+      <h2>Ajukan Pertanyaan Baru</h2>
+      <p class="subtext">Sampaikan pertanyaan atau masalahmu secara aman di sini.</p>
+
+      <form id="createQuestionForm" onsubmit="handleCreateQuestionSubmit(event)">
+        <div class="form-group">
+          <label for="qKategori">Kategori Utama</label>
+          <select id="qKategori" class="form-input" onchange="handleCategoryChange()" required>
+            <option value="">-- Pilih Kategori --</option>
+          </select>
+        </div>
+
+        <div class="form-group hidden" id="subKategoriGroup">
+          <label for="qSubKategori">Subkategori Agama / Syariat</label>
+          <select id="qSubKategori" class="form-input">
+            <option value="">-- Pilih Subkategori --</option>
+            <option value="Ibadah">Ibadah</option>
+            <option value="Fikih">Fikih</option>
+            <option value="Akhlak">Akhlak</option>
+            <option value="Muamalah">Muamalah</option>
+            <option value="Hukum Syariat">Hukum Syariat</option>
+            <option value="Al-Qur’an & Hadis">Al-Qur’an & Hadis</option>
+            <option value="Pertanyaan Keagamaan Lainnya">Pertanyaan Keagamaan Lainnya</option>
+          </select>
+        </div>
+
+        <div class="form-group">
+          <label for="qPertanyaan">Isi Pertanyaan / Keluhan</label>
+          <textarea id="qPertanyaan" class="form-input textarea" rows="5" placeholder="Tuliskan cerita atau pertanyaanmu dengan rinci di sini..." maxlength="5000" required></textarea>
+        </div>
+
+        <div class="form-row privacy-box">
+          <div class="form-group">
+            <label>Identitas Pengirim</label>
+            <div class="radio-group">
+              <label><input type="radio" name="qAnonim" value="false" checked> Tampilkan Nama</label>
+              <label><input type="radio" name="qAnonim" value="true"> Anonim (Sembunyikan Nama)</label>
+            </div>
+          </div>
+          <div class="form-group">
+            <label>Hak Akses / Publikasi</label>
+            <div class="radio-group">
+              <label><input type="radio" name="qPrivat" value="false" checked> Publik (Bisa dibaca siswa lain)</label>
+              <label><input type="radio" name="qPrivat" value="true"> Privat (Hanya Guru/Admin & Saya)</label>
+            </div>
+          </div>
+        </div>
+
+        <div class="actions-right">
+          <button type="button" class="btn btn-secondary" onclick="showPage('studentDashboard')">Batal</button>
+          <button type="submit" id="btnSubmitQuestion" class="btn btn-primary">Kirim Pertanyaan</button>
+        </div>
+      </form>
+    </div>
+  </section>
+
+  <!-- QUESTION DETAIL & THREAD PAGE -->
+  <section id="questionDetailPage" class="page">
+    <div class="container">
+      <button class="btn btn-secondary btn-sm" onclick="goBackFromDetail()">← Kembali</button>
+      <div id="questionDetailCard" class="detail-card">
+        <div class="loading-spinner">Memuat detail thread...</div>
+      </div>
+
+      <!-- THREAD MESSAGES -->
+      <div class="thread-section">
+        <h3>Riwayat Percakapan</h3>
+        <div id="threadMessages" class="messages-list"></div>
+
+        <!-- FOLLOW UP FORM -->
+        <form id="followUpForm" class="followup-box" onsubmit="handleFollowUpSubmit(event)">
+          <textarea id="followUpText" class="form-input" rows="3" placeholder="Tulis tanggapan atau pertanyaan balasanmu di sini..." required></textarea>
+          <button type="submit" id="btnSendFollowUp" class="btn btn-primary">Kirim Tanggapan</button>
+        </form>
+      </div>
+    </div>
+  </section>
+
+  <!-- GURU DASHBOARD -->
+  <section id="guruDashboard" class="page">
+    <div class="dashboard-header">
+      <div>
+        <h2>Dashboard Guru</h2>
+        <p id="guruWelcome">Ringkasan Statistik & Pertanyaan Siswa</p>
+      </div>
+      <button class="btn btn-secondary" onclick="logout()">Keluar</button>
+    </div>
+
+    <!-- STATS GRID -->
+    <div class="stats-grid">
+      <div class="stat-card"><div class="stat-num" id="stTotal">0</div><div class="stat-lbl">Total Pertanyaan</div></div>
+      <div class="stat-card"><div class="stat-num" id="stToday">0</div><div class="stat-lbl">Hari Ini</div></div>
+      <div class="stat-card"><div class="stat-num" id="stAnswered">0</div><div class="stat-lbl">Sudah Dijawab</div></div>
+      <div class="stat-card"><div class="stat-num" id="stUnanswered">0</div><div class="stat-lbl">Belum Dijawab</div></div>
+    </div>
+
+    <div class="section-title">Daftar Konsultasi Siswa</div>
+    <div id="guruQuestionsList" class="questions-grid"></div>
+  </section>
+
+  <!-- ADMIN DASHBOARD -->
+  <section id="adminDashboard" class="page">
+    <div class="dashboard-header">
+      <div>
+        <h2>Panel Moderasi Admin Sekolah</h2>
+        <p>Pusat Penanganan Konsultasi & Pengaturan Sistem</p>
+      </div>
+      <div>
+        <button class="btn btn-secondary" onclick="showTelegramConfigModal()">⚙️ Setting Telegram</button>
+        <button class="btn btn-secondary" onclick="logout()">Keluar</button>
+      </div>
+    </div>
+
+    <div class="section-title">Semua Masukan & Pertanyaan Siswa</div>
+    <div id="adminQuestionsList" class="admin-table-wrapper">
+      <div class="loading-spinner">Memuat data konseling...</div>
+    </div>
+  </section>
+
+  <!-- ADMIN REPLY MODAL -->
+  <div id="adminReplyModal" class="modal-overlay hidden">
+    <div class="card-modal">
+      <button class="btn-close" onclick="closeAdminModal()">✕</button>
+      <h3>Respon / Berikan Jawaban Admin</h3>
+      <p id="adminModalQuestionId" class="badge"></p>
+      <div id="adminModalQuestionBody" class="modal-body-preview"></div>
+
+      <form onsubmit="handleAdminReplySubmit(event)">
+        <input type="hidden" id="adminReplyQId">
+        <div class="form-group">
+          <label for="adminReplyText">Isi Jawaban Resmi / Arahan</label>
+          <textarea id="adminReplyText" class="form-input textarea" rows="5" required></textarea>
+        </div>
+        <div class="form-group">
+          <label for="adminStatusSelect">Ubah Status Pertanyaan</label>
+          <select id="adminStatusSelect" class="form-input">
+            <option value="DIJAWAB">DIJAWAB (Selesai dijawab)</option>
+            <option value="DIPROSES">DIPROSES (Membutuhkan tindak lanjut)</option>
+            <option value="DITUTUP">DITUTUP (Tutup thread)</option>
+          </select>
+        </div>
+        <div class="actions-right">
+          <button type="button" class="btn btn-secondary" onclick="closeAdminModal()">Batal</button>
+          <button type="submit" id="btnAdminSubmitReply" class="btn btn-primary">Kirim Jawaban</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <!-- TELEGRAM CONFIG MODAL -->
+  <div id="telegramModal" class="modal-overlay hidden">
+    <div class="card-modal">
+      <button class="btn-close" onclick="closeTelegramModal()">✕</button>
+      <h3>Pengaturan Integrasi Telegram Bot</h3>
+      <p class="subtext">Disimpan dengan aman di PropertiesService Server Google Apps Script.</p>
+
+      <form onsubmit="handleTelegramSave(event)">
+        <div class="form-group">
+          <label for="tgBotToken">Telegram Bot Token</label>
+          <input type="text" id="tgBotToken" class="form-input" placeholder="Contoh: 123456789:ABCdefGhIJK..." required>
+        </div>
+        <div class="form-group">
+          <label for="tgChatId">Admin Telegram Chat ID / Group ID</label>
+          <input type="text" id="tgChatId" class="form-input" placeholder="Contoh: -100123456789 atau 987654321" required>
+        </div>
+        <div class="actions-right">
+          <button type="button" class="btn btn-secondary" onclick="testTelegramBot()">Kirim Tes Bot</button>
+          <button type="submit" class="btn btn-primary">Simpan Pengaturan</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <!-- PUBLIC QUESTIONS PAGE -->
+  <section id="publicPage" class="page">
+    <div class="container">
+      <h2>Tanya Jawab Publik</h2>
+      <p class="subtext">Daftar pertanyaan dan jawaban publik yang bermanfaat bagi siswa sekolah.</p>
+      <div id="publicQuestionsList" class="public-grid">
+        <div class="loading-spinner">Memuat data publik...</div>
+      </div>
+    </div>
+  </section>
+
   <script src="app.js"></script>
 </body>
 </html>
