@@ -1,5 +1,14 @@
+
+function toast(message, type="info"){
+  let el=document.querySelector(".toast");
+  if(!el){el=document.createElement("div");el.className="toast";document.body.appendChild(el)}
+  el.textContent=message;
+  clearTimeout(window.__toastTimer);
+  window.__toastTimer=setTimeout(()=>el.remove(),3200);
+}
+
 /* Set this to your deployed Google Apps Script Web App URL. */
-const API_URL = "https://script.google.com/macros/s/AKfycbyoL1Dkxs9r1cqL0zuzKw4nJEY1d68EEpVyctMyYi4zZsMrDMTiUtHoH8Nv_z5WK8dE9g/exec";
+const API_URL = "PASTE_YOUR_APPS_SCRIPT_WEB_APP_URL_HERE";
 const state = { session: JSON.parse(localStorage.getItem("konsultasi_session") || "null"), categories: [], questions: [] };
 
 const $ = (s, root=document) => root.querySelector(s);
@@ -27,8 +36,15 @@ async function api(action,payload={}){
   if(API_URL.includes("PASTE_YOUR")) throw new Error("API belum dikonfigurasi. Isi API_URL di frontend/app.js.");
   const body={action,...payload};
   if(state.session) body.token=state.session.token;
-  const r=await fetch(API_URL,{method:"POST",headers:{"Content-Type":"text/plain;charset=utf-8"},body:JSON.stringify(body)});
-  const data=await r.json();
+  let r;
+  try {
+    r = await fetch(API_URL,{method:"POST",headers:{"Content-Type":"text/plain;charset=utf-8"},body:JSON.stringify(body)});
+  } catch (err) {
+    throw new Error("Tidak dapat terhubung ke server. Periksa URL Apps Script dan koneksi internet.");
+  }
+  let data;
+  try { data = await r.json(); }
+  catch (err) { throw new Error("Respons server tidak valid. Pastikan Web App Apps Script sudah dideploy ulang."); }
   if(!data.ok) throw new Error(data.message||"Terjadi kesalahan.");
   return data;
 }
@@ -150,7 +166,7 @@ function bindThread(c,id,mode){
 
 async function loadTeacher(){
   const c=$("#teacher-content");c.innerHTML=`<div class="empty">Memuat dashboard guru...</div>`;
-  try{const d=await api("getTeacherDashboard");c.innerHTML=teacherHTML(d);bindTeacher(c)}catch(e){c.innerHTML=`<div class="panel"><p class="danger-text">${esc(e.message)}</p></div>`}
+  try{await loadCategories();const d=await api("getTeacherDashboard");c.innerHTML=teacherHTML(d);bindTeacher(c)}catch(e){c.innerHTML=`<div class="panel"><p class="danger-text">${esc(e.message)}</p></div>`}
 }
 function teacherHTML(d){
   const qs=d.questions||[];
@@ -169,11 +185,34 @@ async function teacherInterest(id){
 
 async function loadAdmin(){
   const c=$("#admin-content");c.innerHTML=`<div class="empty">Memuat dashboard admin...</div>`;
-  try{const d=await api("getAdminDashboard");c.innerHTML=adminHTML(d);bindAdmin(c)}catch(e){c.innerHTML=`<div class="panel"><p class="danger-text">${esc(e.message)}</p></div>`}
+  try{const d=await api("getAdminDashboard");c.innerHTML=adminHTML(d);bindAdmin(c);loadTelegramSettings()}catch(e){c.innerHTML=`<div class="panel"><p class="danger-text">${esc(e.message)}</p></div>`}
 }
+
+function adminNotificationHTML(){
+  return `<section class="card admin-notification-card">
+    <div class="section-heading"><div>
+      <h3>🔔 Notifikasi Telegram</h3>
+      <p class="muted">Pemberitahuan saat ada pertanyaan baru, pesan lanjutan, atau guru ingin membantu.</p>
+    </div></div>
+    <div class="form-grid">
+      <label class="switch-row"><input id="telegramEnabled" type="checkbox"><span>Aktifkan notifikasi Telegram</span></label>
+      <label>Bot Token<input id="telegramBotToken" type="password" placeholder="Contoh: 123456789:AA..."></label>
+      <label>Admin Chat ID<input id="telegramChatId" type="text" placeholder="Contoh: 123456789"></label>
+      <label>URL Dashboard Admin<input id="adminDashboardUrl" type="url" placeholder="Contoh: https://username.github.io/konsultasi/"></label>
+    </div>
+    <div class="button-row">
+      <button class="btn primary" onclick="saveTelegramSettings()">Simpan Pengaturan</button>
+      <button class="btn secondary" onclick="testTelegram()">Kirim Tes</button>
+    </div>
+    <p id="telegramStatus" class="muted"></p>
+    <small class="muted">Token disimpan di Apps Script Properties dan tidak dikirim ke frontend siswa/guru.</small>
+  </section>`;
+}
+
 function adminHTML(d){
   return `<div class="page-head"><div><span class="eyebrow">ADMIN</span><h1>Panel Administrasi</h1><p class="muted">Kelola pertanyaan, jawaban, pengguna, kategori, dan statistik.</p></div></div>
   <div class="dashboard-grid"><div class="stat"><div class="value">${d.stats.questions}</div><div class="label">Pertanyaan</div></div><div class="stat"><div class="value">${d.stats.users}</div><div class="label">Siswa</div></div><div class="stat"><div class="value">${d.stats.teachers}</div><div class="label">Guru</div></div><div class="stat"><div class="value">${d.stats.unread}</div><div class="label">Jawaban Belum Dibaca</div></div></div>
+  ${adminNotificationHTML()}
   <div class="admin-grid"><div class="panel"><h2>Pertanyaan</h2><div class="filters"><select id="admin-status"><option value="">Semua status</option><option>Menunggu</option><option>Sedang Ditangani</option><option>Guru Membantu</option><option>Sudah Dijawab</option><option>Ditutup</option></select><select id="admin-public"><option value="">Semua publikasi</option><option>PUBLIK</option><option>PRIVAT</option></select></div><div id="admin-list" class="question-list">${questionCards(d.questions||[],"admin")}</div></div>
   <div class="panel"><h2>Bantuan Guru</h2>${(d.interests||[]).map(x=>`<div class="question-card"><strong>${esc(x.teacher)}</strong><p class="small">${esc(x.code)}</p><span class="badge yellow">${esc(x.status)}</span></div>`).join("")||'<div class="empty">Belum ada permintaan bantuan.</div>'}</div></div>`;
 }

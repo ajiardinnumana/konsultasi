@@ -3,7 +3,7 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width,initial-scale=1">
-  <title>Konsultasi Siswa</title>
+  <title>Konsultasi — Tanya Jawab Siswa</title>
   <meta name="description" content="Kanal konsultasi dan tanya jawab siswa.">
   <link rel="stylesheet" href="style.css">
 </head>
@@ -123,23 +123,3 @@
   <script src="app.js"></script>
 </body>
 </html>
-        <section class="card admin-notification-card">
-          <div class="section-heading">
-            <div>
-              <h3>🔔 Notifikasi Telegram</h3>
-              <p class="muted">Pemberitahuan saat ada pertanyaan baru, pesan lanjutan, atau guru ingin membantu.</p>
-            </div>
-          </div>
-          <div class="form-grid">
-            <label class="switch-row"><input id="telegramEnabled" type="checkbox"><span>Aktifkan notifikasi Telegram</span></label>
-            <label>Bot Token<input id="telegramBotToken" type="password" placeholder="Contoh: 123456789:AA..."></label>
-            <label>Admin Chat ID<input id="telegramChatId" type="text" placeholder="Contoh: 123456789"></label>
-            <label>URL Dashboard Admin<input id="adminDashboardUrl" type="url" placeholder="Contoh: https://username.github.io/konsultasi/"></label>
-          </div>
-          <div class="button-row">
-            <button class="btn primary" onclick="saveTelegramSettings()">Simpan Pengaturan</button>
-            <button class="btn secondary" onclick="testTelegram()">Kirim Tes</button>
-          </div>
-          <p id="telegramStatus" class="muted"></p>
-          <small class="muted">Token disimpan di Apps Script Properties dan tidak dikirim ke frontend siswa/guru.</small>
-        </section>
