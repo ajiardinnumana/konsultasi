@@ -3,7 +3,7 @@
  */
 
 // Ganti URL Web App GAS hasil deployment Anda di sini
-const API_URL = "https://script.google.com/macros/s/AKfycbyoL1Dkxs9r1cqL0zuzKw4nJEY1d68EEpVyctMyYi4zZsMrDMTiUtHoH8Nv_z5WK8dE9g/exec";
+const API_URL = "https://script.google.com/macros/s/AKfycbzyetRtKmPLs9RALNjuPRCCJK32riijZ4JPe3PZRRdf4WmtuKVPca1Qqku42w0jfMtS/exec";
 
 let state = {
   token: localStorage.getItem('konsultasi_token') || null,
