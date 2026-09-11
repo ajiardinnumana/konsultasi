@@ -1,0 +1,145 @@
+<!doctype html>
+<html lang="id">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <title>Konsultasi Siswa</title>
+  <meta name="description" content="Kanal konsultasi dan tanya jawab siswa.">
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <header class="topbar">
+    <div class="brand">
+      <div class="brand-mark">K</div>
+      <div><strong>Konsultasi</strong><span>Tanya Jawab Siswa</span></div>
+    </div>
+    <nav id="nav" class="nav"></nav>
+  </header>
+
+  <main class="container">
+    <section id="page-home" class="page">
+      <div class="hero">
+        <div>
+          <span class="eyebrow">RUANG AMAN UNTUK BERTANYA</span>
+          <h1>Tak harus malu untuk bertanya.</h1>
+          <p>Tanyakan pelajaran, kesulitan belajar, pertemanan, masalah pribadi, agama, karier, atau hal lain yang ingin kamu konsultasikan.</p>
+          <div class="actions">
+            <button class="btn primary" onclick="showPage('register')">Buat Akun</button>
+            <button class="btn secondary" onclick="showPage('login')">Masuk</button>
+          </div>
+        </div>
+        <div class="hero-card">
+          <div class="hero-icon">💬</div>
+          <h3>Privasi diutamakan</h3>
+          <p>Kamu dapat memilih apakah nama ditampilkan dan apakah pertanyaan boleh dipublikasikan.</p>
+        </div>
+      </div>
+
+      <div class="grid-3">
+        <div class="info-card"><span>📖</span><h3>Pelajaran</h3><p>Tanya materi yang belum dipahami.</p></div>
+        <div class="info-card"><span>💭</span><h3>Konsultasi</h3><p>Ceritakan masalah sosial atau pribadi.</p></div>
+        <div class="info-card"><span>🕌</span><h3>Agama</h3><p>Tanyakan ibadah, fikih, akhlak, dan lainnya.</p></div>
+      </div>
+
+      <div class="notice">
+        <strong>Catatan penting:</strong> Jika kamu sedang dalam bahaya, mengalami kekerasan, atau membutuhkan bantuan segera, jangan hanya mengandalkan aplikasi ini. Segera hubungi orang tua/wali, guru, BK, atau pihak sekolah yang dapat membantu secara langsung.
+      </div>
+      <div class="panel">
+        <div class="page-head"><div><h2>Pertanyaan & Jawaban Publik</h2><p class="muted">Hanya pertanyaan yang diizinkan untuk dipublikasikan yang tampil di sini.</p></div><button class="btn ghost" onclick="loadPublicQuestions()">Muat ulang</button></div>
+        <div id="public-list" class="question-list"><div class="empty">Memuat...</div></div>
+      </div>
+    </section>
+
+    <section id="page-login" class="page hidden">
+      <div class="auth-card">
+        <button class="back" onclick="showPage('home')">← Kembali</button>
+        <h1>Masuk</h1>
+        <p class="muted">Siswa masuk dengan username. Guru masuk dengan nomor HP.</p>
+        <div class="tabs">
+          <button class="tab active" data-login-role="SISWA">Siswa</button>
+          <button class="tab" data-login-role="GURU">Guru</button>
+          <button class="tab" data-login-role="ADMIN">Admin</button>
+        </div>
+
+        <form id="student-login-form" class="form">
+          <label>Username<input name="username" placeholder="Contoh: ahmad atau ahmad12" required></label>
+          <label>Password<div class="password-wrap"><input name="password" type="password" placeholder="Masukkan password 4–8 karakter" required><button type="button" class="eye" aria-label="Tampilkan password">◉</button></div></label>
+          <button class="btn primary full">Masuk sebagai Siswa</button>
+          <button type="button" class="link-btn" onclick="showPage('register')">Belum punya akun? Daftar</button>
+          <p class="small muted">Lupa password? Hubungi admin sekolah untuk reset akun.</p>
+        </form>
+
+        <form id="teacher-login-form" class="form hidden">
+          <label>Nomor HP<input name="phone" inputmode="tel" placeholder="Contoh: 081234567890" required></label>
+          <button class="btn primary full">Masuk sebagai Guru</button>
+          <p class="small muted">V1 menggunakan nomor HP yang terdaftar di data guru.</p>
+        </form>
+
+        <form id="admin-login-form" class="form hidden">
+          <label>Nomor HP<input name="phone" inputmode="tel" placeholder="Contoh: 081234567890" required></label>
+          <label>Password<div class="password-wrap"><input name="password" type="password" placeholder="Password admin" required><button type="button" class="eye" aria-label="Tampilkan password">◉</button></div></label>
+          <button class="btn primary full">Masuk sebagai Admin</button>
+        </form>
+        <div id="login-msg" class="form-msg"></div>
+      </div>
+    </section>
+
+    <section id="page-register" class="page hidden">
+      <div class="auth-card wide">
+        <button class="back" onclick="showPage('home')">← Kembali</button>
+        <h1>Daftar Akun Siswa</h1>
+        <p class="muted">Email tidak diperlukan.</p>
+        <form id="register-form" class="form two-col">
+          <label>Nama Lengkap<input name="name" placeholder="Contoh: Ahmad Fauzan" required></label>
+          <label>Username<input id="reg-username" name="username" placeholder="Contoh: ahmad atau ahmad12" required>
+            <span id="username-status" class="field-status"></span>
+          </label>
+          <label>Kelas<input name="className" placeholder="Contoh: XI" required></label>
+          <label>Jurusan<input name="major" placeholder="Contoh: TKJ / IPA / IPS" required></label>
+          <label>Password<div class="password-wrap"><input name="password" type="password" minlength="4" maxlength="8" placeholder="4–8 karakter" required><button type="button" class="eye" aria-label="Tampilkan password">◉</button></div><span class="hint">Minimal 4, maksimal 8 karakter.</span></label>
+          <label>Konfirmasi Password<div class="password-wrap"><input name="confirm" type="password" minlength="4" maxlength="8" placeholder="Ketik ulang password" required><button type="button" class="eye" aria-label="Tampilkan password">◉</button></div><span id="confirm-status" class="field-status"></span></label>
+          <div class="form-actions full-row">
+            <button class="btn primary">Daftar</button>
+          </div>
+        </form>
+        <div id="register-msg" class="form-msg"></div>
+      </div>
+    </section>
+
+    <section id="page-student" class="page hidden">
+      <div id="student-content"></div>
+    </section>
+
+    <section id="page-teacher" class="page hidden">
+      <div id="teacher-content"></div>
+    </section>
+
+    <section id="page-admin" class="page hidden">
+      <div id="admin-content"></div>
+    </section>
+  </main>
+
+  <footer>© 2026 Konsultasi Siswa · V1</footer>
+  <script src="app.js"></script>
+</body>
+</html>
+        <section class="card admin-notification-card">
+          <div class="section-heading">
+            <div>
+              <h3>🔔 Notifikasi Telegram</h3>
+              <p class="muted">Pemberitahuan saat ada pertanyaan baru, pesan lanjutan, atau guru ingin membantu.</p>
+            </div>
+          </div>
+          <div class="form-grid">
+            <label class="switch-row"><input id="telegramEnabled" type="checkbox"><span>Aktifkan notifikasi Telegram</span></label>
+            <label>Bot Token<input id="telegramBotToken" type="password" placeholder="Contoh: 123456789:AA..."></label>
+            <label>Admin Chat ID<input id="telegramChatId" type="text" placeholder="Contoh: 123456789"></label>
+            <label>URL Dashboard Admin<input id="adminDashboardUrl" type="url" placeholder="Contoh: https://username.github.io/konsultasi/"></label>
+          </div>
+          <div class="button-row">
+            <button class="btn primary" onclick="saveTelegramSettings()">Simpan Pengaturan</button>
+            <button class="btn secondary" onclick="testTelegram()">Kirim Tes</button>
+          </div>
+          <p id="telegramStatus" class="muted"></p>
+          <small class="muted">Token disimpan di Apps Script Properties dan tidak dikirim ke frontend siswa/guru.</small>
+        </section>
