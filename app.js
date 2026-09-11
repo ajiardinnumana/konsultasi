@@ -1,12 +1,3 @@
-
-function toast(message, type="info"){
-  let el=document.querySelector(".toast");
-  if(!el){el=document.createElement("div");el.className="toast";document.body.appendChild(el)}
-  el.textContent=message;
-  clearTimeout(window.__toastTimer);
-  window.__toastTimer=setTimeout(()=>el.remove(),3200);
-}
-
 /* Set this to your deployed Google Apps Script Web App URL. */
 const API_URL = "https://script.google.com/macros/s/AKfycbyoL1Dkxs9r1cqL0zuzKw4nJEY1d68EEpVyctMyYi4zZsMrDMTiUtHoH8Nv_z5WK8dE9g/exec";
 const state = { session: JSON.parse(localStorage.getItem("konsultasi_session") || "null"), categories: [], questions: [] };
@@ -27,10 +18,10 @@ function showPage(name){
 }
 function renderNav(){
   const n=$("#nav"); if(!n)return;
-  if(!state.session){ n.innerHTML=`<button onclick="showPage('login')">Masuk</button><button class="btn primary" onclick="showPage('register')">Daftar</button>`; return; }
+  if(!state.session){ n.innerHTML=`<button class="btn secondary" onclick="showPage('login')">Masuk</button><button class="btn primary" onclick="showPage('register')">Daftar</button>`; return; }
   const role=state.session.role;
   const page=role==="SISWA"?"student":role==="GURU"?"teacher":"admin";
-  n.innerHTML=`<button onclick="showPage('${page}')">Dashboard</button><button onclick="clearSession()">Keluar</button>`;
+  n.innerHTML=`<button class="btn secondary" onclick="showPage('${page}')">Dashboard</button><button class="btn ghost" onclick="clearSession()">Keluar</button>`;
 }
 async function api(action,payload={}){
   if(API_URL.includes("PASTE_YOUR")) throw new Error("API belum dikonfigurasi. Isi API_URL di frontend/app.js.");
