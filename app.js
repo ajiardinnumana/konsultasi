@@ -1,5 +1,5 @@
 /* Set this to your deployed Google Apps Script Web App URL. */
-const API_URL = "https://script.google.com/macros/s/AKfycbyoL1Dkxs9r1cqL0zuzKw4nJEY1d68EEpVyctMyYi4zZsMrDMTiUtHoH8Nv_z5WK8dE9g/exec";
+const API_URL = "PASTE_YOUR_APPS_SCRIPT_WEB_APP_URL_HERE";
 const state = { session: JSON.parse(localStorage.getItem("konsultasi_session") || "null"), categories: [], questions: [] };
 
 const $ = (s, root=document) => root.querySelector(s);
