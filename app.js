@@ -351,3 +351,34 @@ function togglePassword(id) {
 function goBackFromDetail() {
   navigateRoleDashboard();
 }
+async function registerSiswa(formData) {
+  const payload = {
+    action: "REGISTER",
+    data: {
+      nama: formData.nama,
+      kelas: formData.kelas,
+      jurusan: formData.jurusan,
+      username: formData.username,
+      password: formData.password
+    }
+  };
+
+  try {
+    // KIRIM TANPA HEADER Content-Type KUSTOM UNTUK MENGHINDARI PREFLIGHT CORS
+    const response = await fetch(API_URL, {
+      method: "POST",
+      body: JSON.stringify(payload)
+    });
+
+    const result = await response.json();
+
+    if (result.success) {
+      alert("Pendaftaran Berhasil! Silakan Login.");
+    } else {
+      alert("Gagal: " + result.message);
+    }
+  } catch (error) {
+    console.error("Error Detail:", error);
+    alert("Terjadi masalah koneksi / Failed to fetch.");
+  }
+}
