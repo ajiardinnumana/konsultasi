@@ -1,5 +1,5 @@
 /* KONSULTASI frontend — no frameworks. Backend URL is configured below. */
-const API_URL = localStorage.getItem("konsultasi_api_url") || "PASTE_APPS_SCRIPT_WEB_APP_URL_HERE";
+const API_URL = localStorage.getItem("konsultasi_api_url") || "https://script.google.com/macros/s/AKfycbzyetRtKmPLs9RALNjuPRCCJK32riijZ4JPe3PZRRdf4WmtuKVPca1Qqku42w0jfMtS/exec";
 const state = { token: localStorage.getItem("konsultasi_token") || "", role: localStorage.getItem("konsultasi_role") || "", user: null, categories: [], currentQuestion: null, authRole: "student" };
 
 const $ = (s, r=document) => r.querySelector(s);
