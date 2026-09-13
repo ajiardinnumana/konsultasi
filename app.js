@@ -35,7 +35,22 @@ async function api(action,data={},opts={}){
 function logout(show=true){state.token="";state.role="";state.user=null;localStorage.removeItem("konsultasi_token");localStorage.removeItem("konsultasi_role");if(show)showPage("home")}
 function renderHomeCategories(){const box=$("#home-categories");if(!box)return;const cats=state.categories.length?state.categories:[["📖","Materi Pelajaran"],["🧠","Kesulitan Belajar"],["👥","Pertemanan & Sosial"],["💭","Masalah Pribadi"],["🏫","Masalah Sekolah"],["🕌","Agama, Ibadah & Syariat"],["🎯","Karier & Masa Depan"],["❓","Lainnya"]];box.innerHTML=cats.map(c=>`<div class="category-card"><b>${esc(Array.isArray(c)?c[0]+" "+c[1]:c)}</b><span>Ruang untuk bertanya dan mencari bantuan.</span></div>`).join("")}
 async function loadCategories(){
-  try{state.categories=await api("getCategories");renderCategorySelects();renderHomeCategories()}catch(e){toast(e.message)}
+  try{
+    const result = await api("getCategories");
+
+    state.categories = Array.isArray(result)
+      ? result
+      : (Array.isArray(result.categories) ? result.categories : []);
+
+    renderCategorySelects();
+    renderHomeCategories();
+  }catch(e){
+    console.error("Gagal memuat kategori:", e);
+    state.categories = [];
+    renderCategorySelects();
+    renderHomeCategories();
+    toast(e.message);
+  }
 }
 function renderCategorySelects(){
   const active=state.categories.filter(c=>c.status!=="NONAKTIF");
